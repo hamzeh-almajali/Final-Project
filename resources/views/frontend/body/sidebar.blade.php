@@ -104,7 +104,7 @@
                     </div><!-- sidebar -->
                     <!--here -->
 
-                    @include('frontend.index')
+                    {{-- @include('frontend.index') --}}
 
                 <!-- centerl meta -->
                     <div class="col-lg-3">

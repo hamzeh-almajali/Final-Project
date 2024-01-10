@@ -1,64 +1,85 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index(){
+//       $user=  User::create([
+//             'name'=>'waleed',
+//             'email'=>'hamzeh4@gmail.com',
+//             'password'=>'123456',
+//             'profile_cover'=>'image1',
+//             'friends'=>[
+//                 '1' => 'accepted',
+//                 '2' => 'pending',
+//             ]
+
+//         ]
+// );
+$user=User::all();
+
+
+return view('home',compact('user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+
+
+
+    public function update($authid,$userid2){
+        // $auth=User::find($authid);
+        $user2=User::find($userid2);
+        // $json =$auth->friends;
+        $json2=$user2->friends;
+        $num=0;
+        foreach($json2 as $arr){
+            if($arr['userid'] == $authid){
+                $num++;
+                break;
+            }
+        }
+        if($num == 0){
+        // array_push($json,['userid'=>$userid2,'status'=> 'pending']);
+        // $auth->update([
+        //     'friends'=> $json,
+        // ]);
+        array_push($json2,['userid'=>$authid,'status'=> 'pending']);
+        // dd($json2);
+        $user2->update([
+            'friends'=> $json2,
+        ]);
+        }
+        return redirect()->back();
+    }
+    public function canelreq($authid,$userid){
+
+        // $auth=User::find($authid);
+        $user2=User::find($userid);
+        // $json =$auth->friends;
+        $json2=$user2->friends;
+        // foreach($json as $key => $value){
+        //     if($value['userid']==$authid){
+        //         unset($json[$key]);
+        //         break;
+        //     }
+        // }
+        // $auth->update([
+        //     'friends'=> $json,
+        // ]);
+        foreach($json2 as $key =>$value){
+            if($value['userid']==$authid){
+                unset($json2[$key]);
+                break;
+            }
+        }
+
+        $user2->update([
+            'friends'=> $json2,
+        ]);
+
+        return redirect()->back()->with('info' , 'cancel request succesfully');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

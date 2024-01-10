@@ -16,7 +16,7 @@
             <a href="#/" class="fa fa-search"></a>
         </form>
     </div>
-    <nav id="menu" class="res-menu">
+    {{-- <nav id="menu" class="res-menu">
         <ul>
             <li><span>Home</span>
                 <ul>
@@ -183,7 +183,7 @@
                 </form>
             </div>
         </div>
-    </nav>
+    </nav> --}}
 </div><!-- responsive header -->
 
 <div class="topbar stick">

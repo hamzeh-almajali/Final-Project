@@ -18,14 +18,27 @@
 <body>
 <!--<div class="se-pre-con"></div>-->
 <div class="theme-layout">
-    @include('frontend.body.header')
+    @yield('header')
 </div>
-	<section>
-@include('frontend.body.sidebar')
-	</section>
+
+        <div>
+            @yield('bodyhead')
+        </div>
+
+
+
+
+        @yield('body')
+
+
+
+        
+
+
+
 
 	<footer>
-		@include('frontend.body.footer')
+		@yield('footer')
 	</footer><!-- footer -->
 
 </div>

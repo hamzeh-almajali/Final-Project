@@ -39,6 +39,7 @@
                        @php
                        $buttonPrinted = false;
                        @endphp
+                    @if($use->friends)
 
                    @foreach ($use->friends as $key)
                        @if ($key['userid'] == Auth::user()->id && $key['status'] == 'pending')
@@ -55,7 +56,7 @@
                            @endphp
                        @endif
                    @endforeach
-
+@endif
                    @if (!$buttonPrinted)
                        <a href="{{ route('homee', ['userid' => Auth::user()->id, 'userid2' => $use->id]) }}" class="btn btn-primary">Add</a>
                    @endif

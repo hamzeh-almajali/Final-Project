@@ -188,7 +188,7 @@
 
 <div class="topbar stick">
     <div class="logo">
-        <a title="" href="newsfeed.html"><img src="{{asset('frontend/assets/images/orange.png')}}" alt="Orange" style=" height: 3rem;"></a>
+        <a title="" href="{{route('home')}}"><img src="{{asset('frontend/assets/images/orange.png')}}" alt="Orange" style=" height: 3rem;"></a>
     </div>
 
     <div class="top-area">

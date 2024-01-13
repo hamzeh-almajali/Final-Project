@@ -22,7 +22,7 @@ class UserController extends Controller
 $user=User::all();
 
 
-return view('home',compact('user'));
+return view('frontend.home',compact('user'));
     }
 
 
@@ -34,11 +34,19 @@ return view('home',compact('user'));
         // $json =$auth->friends;
         $json2=$user2->friends;
         $num=0;
-        foreach($json2 as $arr){
-            if($arr['userid'] == $authid){
-                $num++;
-                break;
+        if($json2 != null){
+
+            foreach($json2 as $arr){
+                if($arr['userid'] == $authid){
+                    $num++;
+                    break;
+                }
             }
+        }
+        else{
+
+            $json2 = ['userid' => $authid , 'status' => 'pending'];
+
         }
         if($num == 0){
         // array_push($json,['userid'=>$userid2,'status'=> 'pending']);
@@ -81,5 +89,23 @@ return view('home',compact('user'));
 
         return redirect()->back()->with('info' , 'cancel request succesfully');
     }
+    public function accept($authid, $userid){
+        $user = User::find($authid);
+        $friends = $user->friends;
+
+        foreach($friends as $key => $friend){
+            if($friend['userid'] == $userid){
+                $friends[$key]['status'] = 'accepted';
+                break;
+            }
+        }
+
+        $user->update([
+            'friends' => $friends
+        ]);
+
+        return redirect()->back()->with('message', 'You accepted the friend');
+    }
+
 
 }

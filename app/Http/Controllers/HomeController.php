@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function add($userid){
         $profile=User::where('id',$userid)->first();
 
-        return view('frontend.profile', compact('profile') );
+        return view('frontend.friends', compact('profile') );
     }
     public function updateprofileImage(request $request){
         // dd($request->all());

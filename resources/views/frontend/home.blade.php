@@ -3,6 +3,7 @@
 @include('frontend.body.header')
 @endsection
 @section('body')
+
 <div class="gap gray-bg">
     <div class="container-fluid">
         <div class="row">
@@ -14,37 +15,39 @@
                         <div class="central-meta">
                             <div class="new-postbox">
                                 <figure>
-                                    <img src="{{asset('frontend/assets/images/resources/ahmad.jpg')}}" alt="">
+                                    <img src="{{asset('images/'.Auth::user()->profile_image)}}" alt="">
                                 </figure>
                                 <div class="newpst-input">
-                                    <form method="post">
-                                        <textarea rows="2" placeholder="write something"></textarea>
+                                    <form method="post" action="{{route('postcreate')}}">
+                                        @csrf
+                                        <textarea rows="2" placeholder="write something" name="content"></textarea>
                                         <div class="attachments">
                                             <ul>
-                                                <li>
+                                                {{-- <li>
                                                     <i class="fa fa-music"></i>
                                                     <label class="fileContainer">
                                                         <input type="file">
                                                     </label>
-                                                </li>
+                                                </li> --}}
                                                 <li>
                                                     <i class="fa fa-image"></i>
                                                     <label class="fileContainer">
-                                                        <input type="file">
+                                                        <input type="file" accept="image/*" name="file">
                                                     </label>
                                                 </li>
-                                                <li>
+                                                <input type="hidden" name="id" value="{{Auth::user()->id}}"/>
+                                                {{-- <li>
                                                     <i class="fa fa-video-camera"></i>
                                                     <label class="fileContainer">
                                                         <input type="file">
                                                     </label>
-                                                </li>
-                                                <li>
+                                                </li> --}}
+                                                {{-- <li>
                                                     <i class="fa fa-camera"></i>
                                                     <label class="fileContainer">
                                                         <input type="file">
                                                     </label>
-                                                </li>
+                                                </li> --}}
                                                 <li>
                                                     <button type="submit">Post</button>
                                                 </li>
@@ -55,18 +58,22 @@
                             </div>
                         </div><!-- add post new box -->
                         <div class="loadMore">
+                        @foreach ($posts as $post )
+                        
                         <div class="central-meta item">
                             <div class="user-post">
                                 <div class="friend-info">
                                     <figure>
-                                        <img src="{{asset('frontend/assets/images/resources/friend-avatar10.jpg')}}" alt="">
+                                        <img src="{{asset('images/'.$post->user->profile_image)}}" alt="">
                                     </figure>
                                     <div class="friend-name">
-                                        <ins><a href="time-line.html" title="">Ahmad Zytoon</a></ins>
-                                        <span>published: june,2 2018 19:PM</span>
+                                        <ins><a href="time-line.html" title="">{{Auth::user()->name}}</a></ins>
+                                        <span>{{$post->created_at->diffForHumans()}}</span>
                                     </div>
                                     <div class="post-meta">
+                                        @if (!$post->image)
                                         <img src="{{asset('frontend/assets/images/resources/user-post.jpg')}}" alt="">
+                                        @endif
                                         <div class="we-video-info">
                                             <ul>
                                                 <li>
@@ -75,19 +82,29 @@
                                                         <ins>1.2k</ins>
                                                     </span>
                                                 </li>
+
                                                 <li>
                                                     <span class="comment" data-toggle="tooltip" title="Comments">
                                                         <i class="fa fa-comments-o"></i>
-                                                        <ins>52</ins>
+                                                        <ins>{{$post->comment->count()}}</ins>
                                                     </span>
                                                 </li>
                                                 <li>
+                                                    @if($post->isLikedBy(Auth::user()->id))
+                                                    <span class="like" data-toggle="tooltip" title="like" style="color: orange;">
+                                                        <a href="{{route('removelike',['authid'=>Auth::user()->id ,'postid' => $post->id])}}"><i class="ti-heart"></i></a>
+                                                        <ins>{{$post->totalLikes()}}</ins>
+                                                    </span>
+                                                    @else
                                                     <span class="like" data-toggle="tooltip" title="like">
-                                                        <i class="ti-heart"></i>
-                                                        <ins>2.2k</ins>
+                                                        <a href="{{route('addlike',['authid'=>Auth::user()->id ,'postid' => $post->id])}}"><i class="ti-heart"></i></a>
+                                                        <ins>{{$post->totalLikes()}}</ins>
                                                     </span>
+
+
+                                                    @endif
                                                 </li>
-                                                <li>
+                                                {{-- <li>
                                                     <span class="dislike" data-toggle="tooltip" title="dislike">
                                                         <i class="ti-heart-broken"></i>
                                                         <ins>200</ins>
@@ -125,76 +142,51 @@
                                                       </div>
 
                                                     </div>
-                                                </li>
+                                                </li> --}}
                                             </ul>
                                         </div>
                                         <div class="description">
 
                                             <p>
-                                                World's most beautiful car in Curabitur <a href="#" title="">#test drive booking !</a> the most beatuiful car available in america and the saudia arabia, you can book your test drive by our official website
+                                                {{$post->content}}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="coment-area">
                                     <ul class="we-comet">
+                                        @foreach ($post->comment as $comment )
+
+
                                         <li>
                                             <div class="comet-avatar">
-                                                <img src="{{asset('frontend/assets/images/resources/comet-1.jpg')}}" alt="">
+                                                <img src="{{asset('images/'. $comment->user->profile_image)}}" alt="">
                                             </div>
                                             <div class="we-comment">
                                                 <div class="coment-head">
-                                                    <h5><a href="time-line.html" title="">Jason borne</a></h5>
-                                                    <span>1 year ago</span>
+                                                    <h5><a href="time-line.html" title="">{{$comment->user->name}}</a></h5>
+                                                    <span>{{$comment->created_at->diffForHumans()}}</span>
                                                     <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
                                                 </div>
-                                                <p>we are working for the dance and sing songs. this car is very awesome for the youngster. please vote this car and like our post</p>
+                                                <p>{{$comment->content }}</p>
                                             </div>
-                                            
+
                                         </li>
-                                        <li>
-                                            <div class="comet-avatar">
-                                                <img src="{{asset('frontend/assets/images/resources/comet-1.jpg')}}" alt="">
-                                            </div>
-                                            <div class="we-comment">
-                                                <div class="coment-head">
-                                                    <h5><a href="time-line.html" title="">Donald Trump</a></h5>
-                                                    <span>1 week ago</span>
-                                                    <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-                                                </div>
-                                                <p>we are working for the dance and sing songs. this video is very awesome for the youngster. please vote this video and like our channel
-                                                    <i class="em em-smiley"></i>
-                                                </p>
-                                            </div>
-                                        </li>
+                                        @endforeach
                                         <li>
                                             <a href="#" title="" class="showmore underline">more comments</a>
                                         </li>
                                         <li class="post-comment">
                                             <div class="comet-avatar">
-                                                <img src="{{asset('frontend/assets/images/resources/comet-1.jpg')}}" alt="">
+                                                <img src="{{asset('images/'.Auth::user()->profile_image)}}" alt="">
                                             </div>
                                             <div class="post-comt-box">
-                                                <form method="post">
-                                                    <textarea placeholder="Post your comment"></textarea>
-                                                    <div class="add-smiles">
-                                                        <span class="em em-expressionless" title="add icon"></span>
-                                                    </div>
-                                                    <div class="smiles-bunch">
-                                                        <i class="em em---1"></i>
-                                                        <i class="em em-smiley"></i>
-                                                        <i class="em em-anguished"></i>
-                                                        <i class="em em-laughing"></i>
-                                                        <i class="em em-angry"></i>
-                                                        <i class="em em-astonished"></i>
-                                                        <i class="em em-blush"></i>
-                                                        <i class="em em-disappointed"></i>
-                                                        <i class="em em-worried"></i>
-                                                        <i class="em em-kissing_heart"></i>
-                                                        <i class="em em-rage"></i>
-                                                        <i class="em em-stuck_out_tongue"></i>
-                                                    </div>
-                                                    <button type="submit"></button>
+                                                <form method="post" action="{{route('commentcreate')}}">
+                                                    @csrf
+                                                    <textarea placeholder="Post your comment" name="content"></textarea>
+                                                    <input type="hidden" name="userid" value="{{Auth::user()->id}}" />
+                                                    <input type="hidden" name="postid" value="{{$post->id}}" />
+                                                    <button type="submit" style="color: orange"> send</button>
                                                 </form>
                                             </div>
                                         </li>
@@ -202,7 +194,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        @endforeach
                         </div>
                     </div>
                     @include('frontend.body.liftsidebar')

@@ -49,12 +49,7 @@ return view('frontend.home',compact('user'));
 
         }
         if($num == 0){
-        // array_push($json,['userid'=>$userid2,'status'=> 'pending']);
-        // $auth->update([
-        //     'friends'=> $json,
-        // ]);
         array_push($json2,['userid'=>$authid,'status'=> 'pending']);
-        // dd($json2);
         $user2->update([
             'friends'=> $json2,
         ]);
@@ -63,19 +58,9 @@ return view('frontend.home',compact('user'));
     }
     public function canelreq($authid,$userid){
 
-        // $auth=User::find($authid);
+
         $user2=User::find($userid);
-        // $json =$auth->friends;
         $json2=$user2->friends;
-        // foreach($json as $key => $value){
-        //     if($value['userid']==$authid){
-        //         unset($json[$key]);
-        //         break;
-        //     }
-        // }
-        // $auth->update([
-        //     'friends'=> $json,
-        // ]);
         foreach($json2 as $key =>$value){
             if($value['userid']==$authid){
                 unset($json2[$key]);

@@ -49,8 +49,14 @@
                 </li>
                 <li>
                     <i class="ti-power-off"></i>
-                    <a href="landing.html" title="">Logout</a>
+                    <a href="{{ route('logout') }}" title=""
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();"
+                    >Logout</a>
                 </li>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
             </ul>
         </div><!-- Shortcuts -->
    <!--    recent activites -->

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('userid');
             $table->string('content');
-            $table->text('image')->nullable;
+            $table->text('image')->nullable();
             $table->text('type')->default('1');
             $table->json('likes');
             $table->timestamps();

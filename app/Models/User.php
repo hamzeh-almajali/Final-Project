@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Post;
 
 class User extends Authenticatable
 {
@@ -26,7 +27,12 @@ class User extends Authenticatable
         'profile_cover',
 
     ];
-
+    public function posts(){
+        return $this->hasMany(Post::class , 'userid','id');
+    }
+    public function comments(){
+        return $this->hasMany(Comment::class , 'userid','id');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

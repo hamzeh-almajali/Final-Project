@@ -18,11 +18,29 @@ class Post extends Model
     ];
     public function user(){
 
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'userid','id');
     }
     public function comment(){
 
-        return $this->hasMany('comment');
+        return $this->hasMany(Comment::class,'postid','id');
+    }
+    public function isLikedBy($userId)
+    {
+        $likes = $this->likes;
+
+        if ($likes) {
+            foreach ($likes as $like) {
+                if ($like['userid'] == $userId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    public function totalLikes()
+    {
+        return count($this->likes);
     }
     protected $casts =[
         'likes'=> 'json'

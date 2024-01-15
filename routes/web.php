@@ -22,12 +22,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\PostController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\PostController::class, 'index'])->name('home')->middleware('auth');
 Route::get('/homee/{userid}/{userid2}',[App\Http\Controllers\UserController::class, 'update'])->name('homee');
 Route::get('/cancel/{userid}/{userid2}',[App\Http\Controllers\UserController::class, 'canelreq'])->name('cancel');
 Route::get('/accpted/{userid}/{userid2}',[App\Http\Controllers\UserController::class, 'accept'])->name('accept');
 // route::get('/profilee/{userid}',[App\Http\Controllers\HomeController::class,'add'])->name('profilee');
-route::get('/profilee/{userid}',[App\Http\Controllers\HomeController::class,'add'])->name('profilee');
+route::get('/profilee/{userid}',[App\Http\Controllers\HomeController::class,'add'])->name('profilee')->middleware('auth');
+route::get('/friends/{userid}',[App\Http\Controllers\HomeController::class,'friends'])->name('friends')->middleware('auth');
 route::post('/profile',[App\Http\Controllers\HomeController::class,'updateprofileImage'])->name('profileImage');
 route::post('/profile-cover',[App\Http\Controllers\HomeController::class,'updatecoverImage'])->name('coverImage');
 route::get('/logins' ,function () {

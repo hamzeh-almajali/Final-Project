@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('content');
             $table->text('image')->nullable();
             $table->text('type')->default('1');
-            $table->json('likes');
+            $table->json('likes')->nullable();
             $table->timestamps();
             $table->foreign('userid')->references('id')->on('users')->onDelete('cascade');
         });

@@ -40,7 +40,11 @@ class Post extends Model
     }
     public function totalLikes()
     {
+        if($this->likes){
         return count($this->likes);
+    }else{
+        return 0;
+    }
     }
     protected $casts =[
         'likes'=> 'json'

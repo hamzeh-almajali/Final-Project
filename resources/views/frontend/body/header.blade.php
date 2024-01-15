@@ -199,7 +199,7 @@
             </form>
         </div>
         <ul class="setting-area">
-            <li><a href="newsfeed.html" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
+            <li><a href="{{route('home')}}" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
             <li>
                 <a href="#" title="Notification" data-ripple="">
                     <i class="ti-bell"></i><span>20</span>
@@ -340,13 +340,13 @@
             </li>
         </ul>
         <div class="user-img">
-            <img src="{{asset('frontend/assets/images/resources/admin.jpg')}}" alt="">
+            <img src="{{asset('images/'.Auth::user()->profile_image)}}" alt="" style="width: 50px;">
             <span class="status f-online"></span>
             <div class="user-setting">
                 <a href="#" title=""><span class="status f-online"></span>online</a>
                 <a href="#" title=""><span class="status f-away"></span>away</a>
                 <a href="#" title=""><span class="status f-off"></span>offline</a>
-                <a href="#" title=""><i class="ti-user"></i> view profile</a>
+                <a href="{{route('profilee',['userid' => Auth::user()->id ])}}" title=""><i class="ti-user"></i> view profile</a>
                 <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
                 <a href="#" title=""><i class="ti-target"></i>activity log</a>
                 <a href="#" title=""><i class="ti-settings"></i>account setting</a>

@@ -1,9 +1,11 @@
+@if (Auth::check())
 @extends('frontend.main_master')
+
+
 @section('header')
 @include('frontend.body.header')
 @endsection
 @section('body')
-
 <div class="gap gray-bg">
     <div class="container-fluid">
         <div class="row">
@@ -18,36 +20,21 @@
                                     <img src="{{asset('images/'.Auth::user()->profile_image)}}" alt="">
                                 </figure>
                                 <div class="newpst-input">
-                                    <form method="post" action="{{route('postcreate')}}">
+                                    <form method="post" action="{{route('postcreate')}}" enctype="multipart/form-data">
                                         @csrf
                                         <textarea rows="2" placeholder="write something" name="content"></textarea>
                                         <div class="attachments">
                                             <ul>
-                                                {{-- <li>
-                                                    <i class="fa fa-music"></i>
-                                                    <label class="fileContainer">
-                                                        <input type="file">
-                                                    </label>
-                                                </li> --}}
+
                                                 <li>
                                                     <i class="fa fa-image"></i>
                                                     <label class="fileContainer">
-                                                        <input type="file" accept="image/*" name="file">
+                                                        <input type="file" accept="image/*" name="postimage">
                                                     </label>
                                                 </li>
+
                                                 <input type="hidden" name="id" value="{{Auth::user()->id}}"/>
-                                                {{-- <li>
-                                                    <i class="fa fa-video-camera"></i>
-                                                    <label class="fileContainer">
-                                                        <input type="file">
-                                                    </label>
-                                                </li> --}}
-                                                {{-- <li>
-                                                    <i class="fa fa-camera"></i>
-                                                    <label class="fileContainer">
-                                                        <input type="file">
-                                                    </label>
-                                                </li> --}}
+
                                                 <li>
                                                     <button type="submit">Post</button>
                                                 </li>
@@ -57,9 +44,17 @@
                                 </div>
                             </div>
                         </div><!-- add post new box -->
+                        @if($errors->any())
+                        <ul>
+                        @foreach ($errors->all() as $key )
+                            <li style="color: red">{{$key}}</li>
+
+                        @endforeach
+                        </ul>
+                        @endif
                         <div class="loadMore">
                         @foreach ($posts as $post )
-                        
+
                         <div class="central-meta item">
                             <div class="user-post">
                                 <div class="friend-info">
@@ -67,21 +62,25 @@
                                         <img src="{{asset('images/'.$post->user->profile_image)}}" alt="">
                                     </figure>
                                     <div class="friend-name">
-                                        <ins><a href="time-line.html" title="">{{Auth::user()->name}}</a></ins>
+                                        <ins><a href="{{route('profilee',['userid' => $post->user->id ])}}" title="">{{$post->user->name}}</a></ins>
                                         <span>{{$post->created_at->diffForHumans()}}</span>
                                     </div>
                                     <div class="post-meta">
-                                        @if (!$post->image)
-                                        <img src="{{asset('frontend/assets/images/resources/user-post.jpg')}}" alt="">
+
+                                        <div class="description">
+
+                                            <p>
+                                                {{$post->content}}
+                                            </p>
+                                        </div>
+
+                                        @if ($post->image)
+                                        <img src="{{asset('images/'.$post->image)}}" alt="">
                                         @endif
+
                                         <div class="we-video-info">
                                             <ul>
-                                                <li>
-                                                    <span class="views" data-toggle="tooltip" title="views">
-                                                        <i class="fa fa-eye"></i>
-                                                        <ins>1.2k</ins>
-                                                    </span>
-                                                </li>
+                                               
 
                                                 <li>
                                                     <span class="comment" data-toggle="tooltip" title="Comments">
@@ -104,53 +103,10 @@
 
                                                     @endif
                                                 </li>
-                                                {{-- <li>
-                                                    <span class="dislike" data-toggle="tooltip" title="dislike">
-                                                        <i class="ti-heart-broken"></i>
-                                                        <ins>200</ins>
-                                                    </span>
-                                                </li>
-                                                <li class="social-media">
-                                                    <div class="menu">
-                                                      <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-                                                      </div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-                                                      </div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-                                                      </div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-                                                      </div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-                                                      </div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-                                                        </div>
-                                                      </div>
-                                                        <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-                                                        </div>
-                                                      </div>
-                                                      <div class="rotater">
-                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-                                                        </div>
-                                                      </div>
 
-                                                    </div>
-                                                </li> --}}
                                             </ul>
                                         </div>
-                                        <div class="description">
 
-                                            <p>
-                                                {{$post->content}}
-                                            </p>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="coment-area">
@@ -200,7 +156,11 @@
                     @include('frontend.body.liftsidebar')
                 </div></div></div></div></div>
 
+
 @endsection
 @section('footer')
 @include('frontend.body.footer')
 @endsection
+@else
+<p>{{ route('loginreg') }}</p>
+@endif

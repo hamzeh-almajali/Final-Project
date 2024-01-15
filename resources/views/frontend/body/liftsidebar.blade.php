@@ -17,7 +17,7 @@
                 </li>
                 <li>
                     <i class="ti-user"></i>
-                    <a href="timeline-friends.html" title="">friends</a>
+                    <a href="{{route('friends',['userid' => Auth::user()->id ])}}" title="">friends</a>
                 </li>
                 <li>
                     <i class="fa fa-users"></i>

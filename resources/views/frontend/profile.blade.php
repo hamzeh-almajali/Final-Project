@@ -41,10 +41,11 @@
 <a href="{{ route('homee', ['userid' => Auth::user()->id, 'userid2' => $profile->id]) }}" title="" data-ripple="">Add Friend </a>
 @endif
 @endif
-</div>
+</div>@if (Auth::user()->id == $profile->id)
 <form class="edit-phto" action="{{route('coverImage')}}" method="POST" enctype="multipart/form-data">
     @csrf
     <i class="fa fa-camera-retro"></i>
+
             <label class="fileContainer">
                 Edit Cover Photo
             <input type="file" name="profile_image"/>
@@ -53,12 +54,15 @@
             <input type="hidden" name="id" value="{{$profile->id}}" />
             <input type="submit" value=" Upload Image" />
         </form>
+        @endif
         <div class="container-fluid">
             <div class="row merged">
                 <div class="col-lg-2 col-sm-3">
                     <div class="user-avatar">
                         <figure>
                             <img src="{{asset('images/'.$profile->profile_image)}}" alt="">
+                            @if (Auth::user()->id == $profile->id)
+
                             <form class="edit-phto" action="{{route('profileImage')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <i class="fa fa-camera-retro"></i>
@@ -66,9 +70,20 @@
                                     Edit Display Photo
                                     <input type="file" name="profile_image" />
                                     <input type="hidden" name="id" value="{{$profile->id}}" />
-                                    <input type="submit" value=" Upload Image" />
+                                </label>
+                                    <input type="submit" value="update Image" />
+
                             </form>
+                            @endif
                         </figure>
+                        @if($errors->any())
+                        <ul>
+                        @foreach ($errors->all() as $key )
+                            <li style="color: red">{{$key}}</li>
+
+                        @endforeach
+                        </ul>
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-10 col-sm-9">
@@ -84,12 +99,12 @@
                             </li>
                             <li>
                                 <a class="active" href="#" title="" data-ripple="">time line</a>
-                                {{-- <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
-                                <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a> --}}
-                                <a class="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
-                                {{-- <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a> --}}
+                                @if (Auth::user()->id == $profile->id)
+
+                                <a class="" href="{{route('friends',['userid'=> $profile->id])}}" title="" data-ripple="">Friends</a>
+                                @endif
                                 <a class="" href="#" title="" data-ripple="">about</a>
-                                {{-- <a class="" href="#" title="" data-ripple="">more</a> --}}
+
                             </li>
                         </ul>
                     </div>
@@ -111,41 +126,31 @@
 <div class="col-lg-6">
     <div class="loadMore">
         <div class="central-meta item">
+            @if (Auth::user()->id == $profile->id)
+
             <div class="new-postbox">
+
                 <figure>
-                    <img src="{{asset('frontend/assets/images/resources/ahmad.jpg')}}" alt="">
+                    <img src="{{asset('images/'.$profile->profile_image)}}" alt="">
                 </figure>
                 <div class="newpst-input">
-                    <form method="post">
-                        <textarea rows="2" placeholder="write something"></textarea>
+                    <form method="post" action="{{route('postcreate')}}" enctype="multipart/form-data">
+                        @csrf
+                        <textarea rows="2" placeholder="write something" name="content"></textarea>
                         <div class="attachments">
                             <ul>
-                                <li>
-                                    <i class="fa fa-music"></i>
-                                    <label class="fileContainer">
-                                        <input type="file">
-                                    </label>
-                                </li>
+
                                 <li>
                                     <i class="fa fa-image"></i>
                                     <label class="fileContainer">
-                                        <input type="file">
+                                        <input type="file" accept="image/*" name="postimage">
                                     </label>
                                 </li>
+
+                                <input type="hidden" name="id" value="{{Auth::user()->id}}"/>
+
                                 <li>
-                                    <i class="fa fa-video-camera"></i>
-                                    <label class="fileContainer">
-                                        <input type="file">
-                                    </label>
-                                </li>
-                                <li>
-                                    <i class="fa fa-camera"></i>
-                                    <label class="fileContainer">
-                                        <input type="file">
-                                    </label>
-                                </li>
-                                <li>
-                                    <button type="submit">Publish</button>
+                                    <button type="submit">Post</button>
                                 </li>
                             </ul>
                         </div>
@@ -153,89 +158,105 @@
                 </div>
             </div>
         </div><!-- add post new box -->
-        <div class="central-meta item">
+        @endif
+
+        @foreach ($profile->posts as $post )
+         <div class="central-meta item">
             <div class="user-post">
                 <div class="friend-info">
                     <figure>
-                        <img src="images/resources/friend-avatar10.jpg" alt="">
+                        <img src="{{asset('images/'.$profile->profile_image)}}" alt="">
                     </figure>
                     <div class="friend-name">
-                        <ins><a href="time-line.html" title="">Ahmad Zytoon</a></ins>
-                        <span>published: june,2 2018 19:PM</span>
+                        <ins><a href="time-line.html" title="">{{$profile->name}}</a></ins>
+
+
+                        <span>{{$post->created_at->diffForHumans() }}</span>
+
+
+
                     </div>
                     <div class="description">
 
                             <p>
-                                World's most beautiful car in Curabitur <a href="#" title="">#test drive booking !</a> the most beatuiful car available in america and the saudia arabia, you can book your test drive by our official website
+                             {{$post->content}}
                             </p>
                         </div>
+                        @if ($post->image)
+                        <img src="{{asset('images/'.$post->image)}}" alt="">
+                        @endif
                     <div class="post-meta">
-                        <div class="linked-image align-left">
+                        {{-- <div class="linked-image align-left">
                             <a href="#" title=""><img src="images/resources/page1.jpg" alt=""></a>
-                        </div>
-                        <div class="detail">
+                        </div> --}}
+                        {{-- <div class="detail">
                             <span>Love Maid - ChillGroves</span>
                             <p>Lorem ipsum dolor sit amet, consectetur ipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua... </p>
                             <a href="#" title="">www.sample.com</a>
-                        </div>
+                        </div> --}}
                         <div class="we-video-info">
                             <ul>
 
-                                <li>
-                                    <span class="views" data-toggle="tooltip" title="views">
-                                        <i class="fa fa-eye"></i>
-                                        <ins>1.2k</ins>
-                                    </span>
-                                </li>
+
                                 <li>
                                     <span class="comment" data-toggle="tooltip" title="Comments">
                                         <i class="fa fa-comments-o"></i>
-                                        <ins>52</ins>
+                                        <ins>{{$post->comment->count()}}</ins>
                                     </span>
                                 </li>
                                 <li>
-                                    <span class="like" data-toggle="tooltip" title="like">
-                                        <i class="ti-heart"></i>
-                                        <ins>2.2k</ins>
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="dislike" data-toggle="tooltip" title="dislike">
-                                        <i class="ti-heart-broken"></i>
-                                        <ins>200</ins>
-                                    </span>
-                                </li>
-                                <li class="social-media">
-                                    <div class="menu">
-                                      <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-                                      </div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-                                      </div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-                                      </div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-                                      </div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-                                      </div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-                                        </div>
-                                      </div>
-                                        <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-                                        </div>
-                                      </div>
-                                      <div class="rotater">
-                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-                                        </div>
-                                      </div>
+                                @if($post->isLikedBy(Auth::user()->id))
+                                <span class="like" data-toggle="tooltip" title="like" style="color: orange;">
+                                    <a href="{{route('removelike',['authid'=>Auth::user()->id ,'postid' => $post->id])}}"><i class="ti-heart"></i></a>
+                                    <ins>{{$post->totalLikes()}}</ins>
+                                </span>
+                                @else
+                                <span class="like" data-toggle="tooltip" title="like">
+                                    <a href="{{route('addlike',['authid'=>Auth::user()->id ,'postid' => $post->id])}}"><i class="ti-heart"></i></a>
+                                    <ins>{{$post->totalLikes()}}</ins>
+                                </span>
 
+
+                                @endif
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="coment-area">
+                            <ul class="we-comet">
+                                @foreach ($post->comment as $comment )
+
+
+                                <li>
+                                    <div class="comet-avatar">
+                                        <img src="{{asset('images/'. $comment->user->profile_image)}}" alt="">
+                                    </div>
+                                    <div class="we-comment">
+                                        <div class="coment-head">
+                                            <h5><a href="time-line.html" title="">{{$comment->user->name}}</a></h5>
+                                            <span>{{$comment->created_at->diffForHumans()}}</span>
+                                            <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
+                                        </div>
+                                        <p>{{$comment->content }}</p>
+                                    </div>
+
+                                </li>
+                                @endforeach
+                                <li>
+                                    <a href="#" title="" class="showmore underline">more comments</a>
+                                </li>
+                                <li class="post-comment">
+                                    <div class="comet-avatar">
+                                        <img src="{{asset('images/'.Auth::user()->profile_image)}}" alt="">
+                                    </div>
+                                    <div class="post-comt-box">
+                                        <form method="post" action="{{route('commentcreate')}}">
+                                            @csrf
+                                            <textarea placeholder="Post your comment" name="content"></textarea>
+                                            <input type="hidden" name="userid" value="{{Auth::user()->id}}" />
+                                            <input type="hidden" name="postid" value="{{$post->id}}" />
+                                            <button type="submit" style="color: orange"> send</button>
+                                        </form>
                                     </div>
                                 </li>
                             </ul>
@@ -244,6 +265,9 @@
                 </div>
             </div>
         </div>
+        @endforeach
+
+        {{--
         <div class="central-meta item">
             <div class="user-post">
                 <div class="friend-info">
@@ -566,7 +590,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 

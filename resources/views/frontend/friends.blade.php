@@ -6,7 +6,7 @@
 @include('frontend.body.header')
 @endsection
 @section('bodyhead')
-{{-- {{dd($profile)}} --}}
+
 <section>
     <div class="feature-photo">
         <figure><img src="{{asset('images/cover-default.png')}}" alt=""></figure>
@@ -71,7 +71,8 @@
                                     Edit Display Photo
                                     <input type="file" name="profile_image" />
                                     <input type="hidden" name="id" value="{{$profile->id}}" />
-                                    <input type="submit" value=" Upload Image" />
+                                </label>
+                                    <button type="submit" value="Upload Image">Upload Image</button>
                             </form>
                         </figure>
                     </div>
@@ -88,10 +89,10 @@
                             @endif
                             </li>
                             <li>
-                                <a class="active" href="#" title="" data-ripple="">time line</a>
+                                <a class="" href="{{route('profilee',['userid' => Auth::user()->id ])}}" title="" data-ripple="">time line</a>
                                 {{-- <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
                                 <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a> --}}
-                                <a class="" href="#" title="" data-ripple="">Friends</a>
+                                <a class="active" href="#" title="" data-ripple="">Friends</a>
                                 {{-- <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a> --}}
                                 <a class="" href="#" title="" data-ripple="">about</a>
                                 {{-- <a class="" href="#" title="" data-ripple="">more</a> --}}
@@ -118,8 +119,8 @@
     <div class="central-meta">
         <div class="frnds">
             <ul class="nav nav-tabs">
-                 <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">My Friends</a> <span>55</span></li>
-                 <li class="nav-item"><a class="" href="#frends-req" data-toggle="tab">Friend Requests</a><span>60</span></li>
+                 <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">My Friends</a>{{-- <span>55</span>--}} </li>
+                 <li class="nav-item"><a class="" href="#frends-req" data-toggle="tab">Friend Requests</a>{{--<span>60</span> --}}</li>
             </ul>
 
             <!-- Tab panes -->
